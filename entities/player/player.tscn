@@ -495,7 +495,6 @@ health_controller = NodePath("HealthController")
 inventory = NodePath("Inventory")
 weapon = ExtResource("3_3wlsy")
 initial_facing = SubResource("Resource_3wlsy")
-max_speed = 250.0
 running_particles = NodePath("SmokeParticles")
 on_attack = NodePath("StateMachine/attack")
 on_fall = NodePath("StateMachine/fall")
@@ -522,14 +521,11 @@ on_hp_decrease = NodePath("../StateMachine/hurt")
 on_hp_0 = NodePath("../StateMachine/death")
 metadata/_custom_type_script = "uid://igey4j36or78"
 
-[node name="AnimatedSprite2D" parent="." index="5"]
+[node name="AnimatedSprite2D" parent="." index="5" unique_id=1449465034]
 material = SubResource("ShaderMaterial_we0b7")
 sprite_frames = SubResource("SpriteFrames_mtric")
 
-[node name="AnimationPlayer" parent="." index="8"]
-autoplay = &"char-idle/down"
-
-[node name="AnimationTree" parent="." index="9"]
+[node name="AnimationTree" parent="." index="9" unique_id=2079922695]
 parameters/walk/BlendSpace2D/blend_position = Vector2(0.00376654, 0.992565)
 
 [node name="StateMachine" type="Node" parent="." index="10" unique_id=1222301681 node_paths=PackedStringArray("current_state")]
@@ -664,17 +660,17 @@ on_enter = Dictionary[String, Variant]({
 [node name="Inventory" parent="." index="11" unique_id=531146878 instance=ExtResource("15_gx6sm")]
 visible = false
 
-[node name="HitBox" parent="." index="12"]
+[node name="HitBox" parent="." index="12" unique_id=1838126655]
 position = Vector2(0, 0)
 collision_layer = 16
 
-[node name="CollisionShape2D" parent="HitBox" index="0"]
+[node name="CollisionShape2D" parent="HitBox" index="0" unique_id=856153241]
 position = Vector2(8, 0)
 disabled = true
 
-[node name="HurtBox" parent="." index="13" node_paths=PackedStringArray("health_controller")]
+[node name="HurtBox" parent="." index="13" unique_id=1240273397 node_paths=PackedStringArray("health_controller")]
 collision_mask = 96
 health_controller = NodePath("../HealthController")
 
-[node name="CollisionShape2D" parent="HurtBox" index="0"]
+[node name="CollisionShape2D" parent="HurtBox" index="0" unique_id=398080308]
 disabled = false

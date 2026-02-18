@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://bw7ep80epbw4i"]
+
+[ext_resource type="Script" uid="uid://dil8t7wtt7w1f" path="res://components/jumper.gd" id="1_idxy4"]
+
+[sub_resource type="Curve2D" id="Curve2D_jk47u"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -36)
+}
+point_count = 2
+
+[node name="Jumper" type="Path2D" unique_id=163421984]
+curve = SubResource("Curve2D_jk47u")
+script = ExtResource("1_idxy4")
+
+[node name="PathFollow2D" type="PathFollow2D" parent="." unique_id=932240029]
+rotates = false
+loop = false
+
+[node name="RemoteTransformSprite" type="RemoteTransform2D" parent="PathFollow2D" unique_id=1828172588]
+remote_path = NodePath("../../../AnimatedSprite2D")
+update_rotation = false
+update_scale = false
