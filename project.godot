@@ -12,13 +12,17 @@ config_version=5
 
 tile_bit_tools/output/show_user_messages=false
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
 config/name="Godot 2D Top-Down Template"
 config/version="1.8.0"
 config/tags=PackedStringArray("template")
 run/main_scene="res://scenes/menus/start_screen.tscn"
-config/features=PackedStringArray("4.4", "GL Compatibility")
+config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="uid://cvnvko43mnhfy"
 
 [autoload]
