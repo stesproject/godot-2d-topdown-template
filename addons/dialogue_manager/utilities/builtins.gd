@@ -52,7 +52,9 @@ static func is_supported(thing, with_method: String = "") -> bool:
 
 static func resolve_property(builtin, property: String):
 	match typeof(builtin):
-		TYPE_ARRAY, TYPE_PACKED_STRING_ARRAY, TYPE_DICTIONARY, TYPE_QUATERNION, TYPE_STRING, TYPE_STRING_NAME:
+		TYPE_DICTIONARY:
+			return builtin.get(property)
+		TYPE_ARRAY, TYPE_PACKED_STRING_ARRAY, TYPE_QUATERNION, TYPE_STRING, TYPE_STRING_NAME:
 			return builtin[property]
 
 		# Some types have constants that we need to manually resolve
@@ -100,7 +102,7 @@ static func resolve_method(thing, method_name: String, args: Array):
 	var expression = Expression.new()
 	if expression.parse("thing.%s(%s)" % [method_name, ",".join(references.slice(1))], references) != OK:
 		assert(false, expression.get_error_text())
-	var result = expression.execute([thing] + args, null, false)
+	var result = await expression.execute([thing] + args, null, false)
 	if expression.has_execute_failed():
 		resolve_method_error = ERR_CANT_RESOLVE
 		return null

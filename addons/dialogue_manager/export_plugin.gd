@@ -3,7 +3,6 @@ class_name DMExportPlugin extends EditorExportPlugin
 const IGNORED_PATHS = [
 	"/assets",
 	"/components",
-	"/l10n",
 	"/views",
 	"inspector_plugin",
 	"test_scene"
@@ -15,7 +14,7 @@ func _get_name() -> String:
 
 
 func _export_file(path: String, type: String, features: PackedStringArray) -> void:
-	var plugin_path: String = Engine.get_meta("DialogueManagerPlugin").get_plugin_path()
+	var plugin_path: String = DMPlugin.get_plugin_path()
 
 	# Ignore any editor stuff
 	for ignored_path: String in IGNORED_PATHS:

@@ -5,12 +5,15 @@ class_name DMImportPlugin extends EditorImportPlugin
 signal compiled_resource(resource: Resource)
 
 
-const COMPILER_VERSION = 14
+const COMPILER_VERSION = 15
 
 
 func _get_importer_name() -> String:
-	# NOTE: A change to this forces a re-import of all dialogue
-	return "dialogue_manager_compiler_%s" % COMPILER_VERSION
+	return "dialogue_manager"
+
+
+func _get_format_version() -> int:
+	return COMPILER_VERSION
 
 
 func _get_visible_name() -> String:
@@ -59,22 +62,20 @@ func _get_option_visibility(path: String, option_name: StringName, options: Dict
 
 
 func _import(source_file: String, save_path: String, options: Dictionary, platform_variants: Array[String], gen_files: Array[String]) -> Error:
-	var cache = Engine.get_meta("DMCache")
-
 	# Get the raw file contents
 	if not FileAccess.file_exists(source_file): return ERR_FILE_NOT_FOUND
 
 	var file: FileAccess = FileAccess.open(source_file, FileAccess.READ)
 	var raw_text: String = file.get_as_text()
 
-	cache.file_content_changed.emit(source_file, raw_text)
+	DMPlugin.instance.cache_file_content_changed.emit(source_file, raw_text)
 
 	# Compile the text
 	var result: DMCompilerResult = DMCompiler.compile_string(raw_text, source_file)
 	if result.errors.size() > 0:
 		printerr("%d errors found in %s" % [result.errors.size(), source_file])
-		cache.add_errors_to_file(source_file, result.errors)
-		return ERR_PARSE_ERROR
+		DMCache.add_errors_to_file(source_file, result.errors)
+		return OK
 
 	# Get the current addon version
 	var config: ConfigFile = ConfigFile.new()
@@ -93,14 +94,14 @@ func _import(source_file: String, save_path: String, options: Dictionary, platfo
 	resource.raw_text = result.raw_text
 
 	# Clear errors and possibly trigger any cascade recompiles
-	cache.add_file(source_file, result)
+	DMCache.add_file(source_file, result)
 
 	var err: Error = ResourceSaver.save(resource, "%s.%s" % [save_path, _get_save_extension()])
 
 	compiled_resource.emit(resource)
 
 	# Recompile any dependencies
-	var dependent_paths: PackedStringArray = cache.get_dependent_paths_for_reimport(source_file)
+	var dependent_paths: PackedStringArray = DMCache.get_dependent_paths_for_reimport(source_file)
 	for path in dependent_paths:
 		append_import_external_resource(path)
 

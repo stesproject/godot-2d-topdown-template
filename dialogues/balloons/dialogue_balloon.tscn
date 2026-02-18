@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cjr3itgj6bqqh"]
+[gd_scene format=3 uid="uid://cjr3itgj6bqqh"]
 
 [ext_resource type="Script" uid="uid://laoeksg0fqyb" path="res://dialogues/balloons/dialogue_balloon.gd" id="1_th60n"]
 [ext_resource type="PackedScene" uid="uid://ckvgyvclnwggo" path="res://addons/dialogue_manager/dialogue_label.tscn" id="2_l2rj6"]
@@ -62,12 +62,48 @@ MarginContainer/constants/margin_right = 30
 MarginContainer/constants/margin_top = 15
 Panel/styles/panel = SubResource("StyleBoxFlat_uy0d5")
 
-[node name="DialogueBalloon" type="CanvasLayer"]
+[sub_resource type="Animation" id="Animation_nlsx6"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Progress:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="Animation" id="Animation_qkmqt"]
+resource_name = "progress"
+loop_mode = 1
+step = 0.1
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Progress:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.2, -0.0157438, -4, -0.2, 0.0112069, 0.25, 0, -4, -0.25, 0, 0.25, 0, 0, -0.2, 0.00299701, 0.25, 0),
+"times": PackedFloat32Array(0, 0.1, 0.5, 0.6, 1)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_th60n"]
+_data = {
+&"RESET": SubResource("Animation_nlsx6"),
+&"progress": SubResource("Animation_qkmqt")
+}
+
+[node name="DialogueBalloon" type="CanvasLayer" unique_id=59701611]
 process_mode = 3
 layer = 100
 script = ExtResource("1_th60n")
 
-[node name="Balloon" type="Control" parent="."]
+[node name="Balloon" type="Control" parent="." unique_id=1206662936]
 unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
@@ -77,7 +113,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_vnod2")
 
-[node name="NameContainer" type="Panel" parent="Balloon"]
+[node name="NameContainer" type="Panel" parent="Balloon" unique_id=448022621]
 z_index = 1
 layout_mode = 0
 offset_left = 20.0
@@ -85,7 +121,7 @@ offset_top = 225.0
 offset_right = 180.0
 offset_bottom = 255.0
 
-[node name="MarginContainer" type="MarginContainer" parent="Balloon/NameContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Balloon/NameContainer" unique_id=744730698]
 clip_contents = true
 layout_mode = 1
 anchors_preset = 15
@@ -98,7 +134,7 @@ theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 0
 theme_override_constants/margin_bottom = 0
 
-[node name="CharacterLabel" type="RichTextLabel" parent="Balloon/NameContainer/MarginContainer"]
+[node name="CharacterLabel" type="RichTextLabel" parent="Balloon/NameContainer/MarginContainer" unique_id=2005030931]
 unique_name_in_owner = true
 modulate = Color(0.905882, 0.678431, 0.537255, 1)
 layout_mode = 2
@@ -110,7 +146,7 @@ scroll_active = false
 autowrap_mode = 0
 horizontal_alignment = 1
 
-[node name="Panel" type="Panel" parent="Balloon"]
+[node name="Panel" type="Panel" parent="Balloon" unique_id=223762743]
 clip_children = 2
 layout_mode = 1
 anchors_preset = 12
@@ -125,7 +161,7 @@ grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 1
 
-[node name="Dialogue" type="MarginContainer" parent="Balloon/Panel"]
+[node name="Dialogue" type="MarginContainer" parent="Balloon/Panel" unique_id=1048857237]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -135,16 +171,40 @@ offset_right = 16.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Balloon/Panel/Dialogue"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Balloon/Panel/Dialogue" unique_id=1486608871]
 layout_mode = 2
 
-[node name="DialogueLabel" parent="Balloon/Panel/Dialogue/VBoxContainer" instance=ExtResource("2_l2rj6")]
+[node name="DialogueLabel" parent="Balloon/Panel/Dialogue/VBoxContainer" unique_id=950510308 instance=ExtResource("2_l2rj6")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Dialogue..."
 
-[node name="Responses" type="MarginContainer" parent="Balloon"]
+[node name="Control" type="Control" parent="Balloon/Panel" unique_id=1598793260]
+custom_minimum_size = Vector2(20, 10)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -10.0
+offset_top = -13.0
+offset_right = 10.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_vertical = 8
+
+[node name="Progress" type="Polygon2D" parent="Balloon/Panel/Control" unique_id=662793009]
+unique_name_in_owner = true
+polygon = PackedVector2Array(0, 0, 10, 10, 20, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Balloon/Panel/Control" unique_id=639656769]
+libraries/ = SubResource("AnimationLibrary_th60n")
+autoplay = &"progress"
+
+[node name="Responses" type="MarginContainer" parent="Balloon" unique_id=1896913694]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -158,7 +218,7 @@ offset_bottom = -116.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="ResponsesMenu" type="VBoxContainer" parent="Balloon/Responses" node_paths=PackedStringArray("response_template")]
+[node name="ResponsesMenu" type="VBoxContainer" parent="Balloon/Responses" unique_id=23052205 node_paths=PackedStringArray("response_template")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 8
@@ -166,9 +226,12 @@ theme_override_constants/separation = 2
 script = ExtResource("3_u7mce")
 response_template = NodePath("ResponseExample")
 
-[node name="ResponseExample" type="Button" parent="Balloon/Responses/ResponsesMenu"]
+[node name="ResponseExample" type="Button" parent="Balloon/Responses/ResponsesMenu" unique_id=755879251]
 layout_mode = 2
 text = "Response example"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=865861096]
+unique_name_in_owner = true
 
 [connection signal="gui_input" from="Balloon" to="." method="_on_balloon_gui_input"]
 [connection signal="response_selected" from="Balloon/Responses/ResponsesMenu" to="." method="_on_responses_menu_response_selected"]

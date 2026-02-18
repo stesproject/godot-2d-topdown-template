@@ -14,6 +14,8 @@ func _clear_highlighting_cache() -> void:
 
 
 func _get_line_syntax_highlighting(line: int) -> Dictionary:
+	expression_parser.include_comments = true
+
 	var colors: Dictionary = {}
 	var text_edit: TextEdit = get_text_edit()
 	var text: String = text_edit.get_line(line)
@@ -54,16 +56,16 @@ func _get_line_syntax_highlighting(line: int) -> Dictionary:
 			index = text.find(" ")
 			if index > -1:
 				var expression: Array = expression_parser.tokenise(text.substr(index), DMConstants.TYPE_CONDITION, 0)
-				if expression.size() == 0 or expression[0].type == DMConstants.TYPE_ERROR:
+				if expression.size() == 0:
 					colors[index] = { color = theme.critical_color }
 				else:
 					_highlight_expression(expression, colors, index)
 
 		DMConstants.TYPE_MUTATION:
-			colors[0] = { color = theme.mutations_color }
+			colors[0] = { color = theme.mutations_line_color }
 			index = text.find(" ")
 			var expression: Array = expression_parser.tokenise(text.substr(index), DMConstants.TYPE_MUTATION, 0)
-			if expression.size() == 0 or expression[0].type == DMConstants.TYPE_ERROR:
+			if expression.size() == 0:
 				colors[index] = { color = theme.critical_color }
 			else:
 				_highlight_expression(expression, colors, index)
@@ -85,9 +87,13 @@ func _get_line_syntax_highlighting(line: int) -> Dictionary:
 
 			var dialogue_text: String = text.substr(index, text.find("=>"))
 
-			# Highlight character name
+			# Highlight character name (but ignore ":" within line ID reference)
 			var split_index: int = dialogue_text.replace("\\:", "??").find(":")
-			colors[index + split_index + 1] = { color = theme.text_color }
+			if text.substr(split_index - 3, 3) != "[ID":
+				colors[index + split_index + 1] = { color = theme.text_color }
+			else:
+				# If there's no character name then just highlight the text as dialogue.
+				colors[index] = { color = theme.text_color }
 
 			# Interpolation
 			var replacements: Array[RegExMatch] = regex.REPLACEMENTS_REGEX.search_all(dialogue_text)
@@ -120,11 +126,11 @@ func _get_line_syntax_highlighting(line: int) -> Dictionary:
 					colors[index + bbcode.end + 1] = { color = theme.text_color }
 				else:
 					colors[index + bbcode.start] = { color = theme.symbols_color }
-					if tag.begins_with("do") or tag.begins_with("set") or tag.begins_with("if"):
+					if tag.begins_with("$>") or tag.begins_with("do") or tag.begins_with("set") or tag.begins_with("if"):
 						if tag.begins_with("if"):
 							colors[index + bbcode.start + 1] = { color = theme.conditions_color }
 						else:
-							colors[index + bbcode.start + 1] = { color = theme.mutations_color }
+							colors[index + bbcode.start + 1] = { color = theme.mutations_line_color }
 						var expression: Array = expression_parser.tokenise(code, DMConstants.TYPE_MUTATION, bbcode.start + bbcode.code.length())
 						if expression.size() == 0 or expression[0].type == DMConstants.TYPE_ERROR:
 							colors[index + bbcode.start + tag.length() + 1] = { color = theme.critical_color }
@@ -156,7 +162,10 @@ func _highlight_expression(tokens: Array, colors: Dictionary, index: int) -> int
 	for token: Dictionary in tokens:
 		last_index = token.i
 		match token.type:
-			DMConstants.TOKEN_CONDITION, DMConstants.TOKEN_AND_OR:
+			DMConstants.TOKEN_COMMENT:
+				colors[index + token.i] = { color = theme.comments_color }
+
+			DMConstants.TOKEN_CONDITION, DMConstants.TOKEN_AND_OR, DMConstants.TOKEN_NOT:
 				colors[index + token.i] = { color = theme.conditions_color }
 
 			DMConstants.TOKEN_VARIABLE:
@@ -167,8 +176,14 @@ func _highlight_expression(tokens: Array, colors: Dictionary, index: int) -> int
 
 			DMConstants.TOKEN_OPERATOR, DMConstants.TOKEN_COLON, \
 			DMConstants.TOKEN_COMMA, DMConstants.TOKEN_DOT, DMConstants.TOKEN_NULL_COALESCE, \
-			DMConstants.TOKEN_NUMBER, DMConstants.TOKEN_ASSIGNMENT:
-				colors[index + token.i] = { color = theme.symbols_color }
+			DMConstants.TOKEN_ASSIGNMENT, DMConstants.TOKEN_COMPARISON:
+				if token.get("value", null) == "in":
+					colors[index + token.i] = { color = theme.conditions_color }
+				else:
+					colors[index + token.i] = { color = theme.symbols_color }
+
+			DMConstants.TOKEN_NUMBER:
+				colors[index + token.i] = { color = theme.numbers_color }
 
 			DMConstants.TOKEN_STRING:
 				colors[index + token.i] = { color = theme.strings_color }

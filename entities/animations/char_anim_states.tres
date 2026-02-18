@@ -1,4 +1,4 @@
-[gd_resource type="AnimationNodeStateMachine" load_steps=79 format=3 uid="uid://b4nom5gtsxhou"]
+[gd_resource type="AnimationNodeStateMachine" format=3 uid="uid://b4nom5gtsxhou"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_t7wic"]
 animation = &"char-attack/down"
@@ -51,7 +51,7 @@ nodes/BlendSpace2D/node = SubResource("AnimationNodeBlendSpace2D_liqcw")
 nodes/BlendSpace2D/position = Vector2(-340, 80)
 nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_eeb7u")
 nodes/TimeScale/position = Vector2(20, 100)
-node_connections = [&"TimeScale", 0, &"BlendSpace2D", &"output", 0, &"TimeScale"]
+node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"BlendSpace2D"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_yunc6"]
 animation = &"char-hurt/down"
@@ -80,12 +80,12 @@ blend_mode = 1
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_d2fqe"]
 graph_offset = Vector2(-463.083, -1.41667)
+nodes/output/position = Vector2(140, 80)
 nodes/BlendSpace2D/node = SubResource("AnimationNodeBlendSpace2D_byubv")
 nodes/BlendSpace2D/position = Vector2(-340, 100)
 nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_lxeno")
 nodes/TimeScale/position = Vector2(-80, 80)
-nodes/output/position = Vector2(140, 80)
-node_connections = [&"TimeScale", 0, &"BlendSpace2D", &"output", 0, &"TimeScale"]
+node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"BlendSpace2D"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_8m0vj"]
 animation = &"char-idle/down"
@@ -116,12 +116,12 @@ blend_mode = 1
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_olu4t"]
 graph_offset = Vector2(-302.501, 85.282)
+nodes/output/position = Vector2(400, 200)
 nodes/BlendSpace2D/node = SubResource("AnimationNodeBlendSpace2D_cxjvq")
 nodes/BlendSpace2D/position = Vector2(-180, 200)
 nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_afy61")
 nodes/TimeScale/position = Vector2(140, 180)
-nodes/output/position = Vector2(400, 200)
-node_connections = [&"TimeScale", 0, &"BlendSpace2D", &"output", 0, &"TimeScale"]
+node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"BlendSpace2D"]
 
 [sub_resource type="AnimationNodeAdd2" id="AnimationNodeAdd2_qhvpr"]
 filters = [".:is_jumping", "Sprite2D:texture"]
@@ -184,7 +184,7 @@ nodes/BlendSpace2D/node = SubResource("AnimationNodeBlendSpace2D_f3x7a")
 nodes/BlendSpace2D/position = Vector2(-480, 120)
 nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_nra1d")
 nodes/TimeScale/position = Vector2(40, 220)
-node_connections = [&"Add2", 0, &"BlendSpace2D", &"Add2", 1, &"Animation", &"TimeScale", 0, &"Add2", &"output", 0, &"TimeScale"]
+node_connections = [&"output", 0, &"TimeScale", &"Add2", 0, &"BlendSpace2D", &"Add2", 1, &"Animation", &"TimeScale", 0, &"Add2"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_oi5dv"]
 animation = &"char-run/down"
@@ -237,7 +237,7 @@ nodes/BlendSpace2D/node = SubResource("AnimationNodeBlendSpace2D_llkql")
 nodes/BlendSpace2D/position = Vector2(-226.667, 66.6667)
 nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_maehu")
 nodes/TimeScale/position = Vector2(80, 120)
-node_connections = [&"TimeScale", 0, &"BlendSpace2D", &"output", 0, &"TimeScale"]
+node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"BlendSpace2D"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_5r8n1"]
 animation = &"char-walk/down"
@@ -290,7 +290,7 @@ nodes/BlendSpace2D/node = SubResource("AnimationNodeBlendSpace2D_ftgjb")
 nodes/BlendSpace2D/position = Vector2(-260, 120)
 nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_5sxgk")
 nodes/TimeScale/position = Vector2(51, 131)
-node_connections = [&"TimeScale", 0, &"BlendSpace2D", &"output", 0, &"TimeScale"]
+node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"BlendSpace2D"]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_u0qfq"]
 advance_mode = 2
