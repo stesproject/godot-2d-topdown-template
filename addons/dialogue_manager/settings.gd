@@ -15,6 +15,8 @@ const NEW_FILE_TEMPLATE = "editor/new_file_template"
 const MISSING_TRANSLATIONS_ARE_ERRORS = "editor/translations/missing_translations_are_errors"
 ## Include character names in the list of translatable strings.
 const INCLUDE_CHARACTERS_IN_TRANSLATABLE_STRINGS_LIST = "editor/translations/include_characters_in_translatable_strings_list"
+## The default delimiter to use when exporting CSVs
+const DEFAULT_CSV_DELIMITER = "editor/translations/default_csv_delimiter"
 ## The default locale to use when exporting CSVs
 const DEFAULT_CSV_LOCALE = "editor/translations/default_csv_locale"
 ## Any extra CSV locales to append to the exported translation CSV
@@ -23,9 +25,16 @@ const EXTRA_CSV_LOCALES = "editor/translations/extra_csv_locales"
 const INCLUDE_CHARACTER_IN_TRANSLATION_EXPORTS = "editor/translations/include_character_in_translation_exports"
 ## Includes a "_notes" column in CSV exports
 const INCLUDE_NOTES_IN_TRANSLATION_EXPORTS = "editor/translations/include_notes_in_translation_exports"
+## Automatically update the project's list of translatable files when dialogue files are added or removed
+const UPDATE_POT_FILES_AUTOMATICALLY = "editor/translations/update_pot_files_automatically"
+
+## A processor handling special case compilation.
+const DIALOGUE_PROCESSOR_PATH = "editor/advanced/dialogue_processor_path"
 
 ## A custom test scene to use when testing dialogue.
 const CUSTOM_TEST_SCENE_PATH = "editor/advanced/custom_test_scene_path"
+## Extra script files to include in the auto-complete-able list
+const EXTRA_AUTO_COMPLETE_SCRIPT_SOURCES = "editor/advanced/extra_auto_complete_script_sources"
 
 ## The custom balloon for this game.
 const BALLOON_PATH = "runtime/balloon_path"
@@ -40,7 +49,7 @@ const IGNORE_MISSING_STATE_VALUES = "runtime/advanced/ignore_missing_state_value
 const USES_DOTNET = "runtime/advanced/uses_dotnet"
 
 
-const SETTINGS_CONFIGURATION = {
+static var SETTINGS_CONFIGURATION = {
 	WRAP_LONG_LINES: {
 		value = false,
 		type = TYPE_BOOL,
@@ -60,6 +69,12 @@ const SETTINGS_CONFIGURATION = {
 		value = true,
 		type = TYPE_BOOL,
 	},
+	DEFAULT_CSV_DELIMITER: {
+		value = "Comma",
+		type = TYPE_STRING,
+		hint = PROPERTY_HINT_ENUM,
+		hint_string = "Comma,Semicolon,Tab"
+	},
 	DEFAULT_CSV_LOCALE: {
 		value = "en",
 		type = TYPE_STRING,
@@ -68,6 +83,8 @@ const SETTINGS_CONFIGURATION = {
 	EXTRA_CSV_LOCALES: {
 		value = [],
 		type = TYPE_PACKED_STRING_ARRAY,
+		hint = PROPERTY_HINT_TYPE_STRING,
+		hint_string = "%d:" % [TYPE_STRING],
 		is_advanced = true
 	},
 	INCLUDE_CHARACTER_IN_TRANSLATION_EXPORTS: {
@@ -80,11 +97,31 @@ const SETTINGS_CONFIGURATION = {
 		type = TYPE_BOOL,
 		is_advanced = true
 	},
+	UPDATE_POT_FILES_AUTOMATICALLY: {
+		value = true,
+		type = TYPE_BOOL,
+		is_advanced = true
+	},
+
+	DIALOGUE_PROCESSOR_PATH: {
+		value = "",
+		type = TYPE_STRING,
+		hint = PROPERTY_HINT_FILE,
+		hint_string = "*.gd,*.cs",
+		is_advanced = true
+	},
 
 	CUSTOM_TEST_SCENE_PATH: {
 		value = preload("./test_scene.tscn").resource_path,
 		type = TYPE_STRING,
 		hint = PROPERTY_HINT_FILE,
+		is_advanced = true
+	},
+	EXTRA_AUTO_COMPLETE_SCRIPT_SOURCES: {
+		value = [],
+		type = TYPE_PACKED_STRING_ARRAY,
+		hint = PROPERTY_HINT_TYPE_STRING,
+		hint_string = "%d/%d:*.*" % [TYPE_STRING, PROPERTY_HINT_FILE],
 		is_advanced = true
 	},
 
@@ -96,6 +133,8 @@ const SETTINGS_CONFIGURATION = {
 	STATE_AUTOLOAD_SHORTCUTS: {
 		value = [],
 		type = TYPE_PACKED_STRING_ARRAY,
+		hint = PROPERTY_HINT_TYPE_STRING,
+		hint_string = "%d:" % [TYPE_STRING],
 	},
 	WARN_ABOUT_METHOD_PROPERTY_OR_SIGNAL_NAME_CONFLICTS: {
 		value = false,
@@ -203,7 +242,7 @@ static func get_user_config() -> Dictionary:
 		recent_files = [],
 		reopen_files = [],
 		most_recent_reopen_file = "",
-		carets = {},
+		file_meta = {},
 		run_title = "",
 		run_resource_path = "",
 		is_running_test_scene = false,
@@ -229,8 +268,15 @@ static func set_user_value(key: String, value) -> void:
 	save_user_config(user_config)
 
 
-static func get_user_value(key: String, default = null):
+static func get_user_value(key: String, default = null) -> Variant:
 	return get_user_config().get(key, default)
+
+
+static func forget_path(path: String) -> void:
+	remove_recent_file(path)
+	var file_meta: Dictionary = get_user_value("file_meta", {})
+	file_meta.erase(path)
+	set_user_value("file_meta", file_meta)
 
 
 static func add_recent_file(path: String) -> void:
@@ -266,21 +312,32 @@ static func clear_recent_files() -> void:
 
 
 static func set_caret(path: String, cursor: Vector2) -> void:
-	var carets: Dictionary = get_user_value("carets", {})
-	carets[path] = {
-		x = cursor.x,
-		y = cursor.y
-	}
-	set_user_value("carets", carets)
+	var file_meta: Dictionary = get_user_value("file_meta", {})
+	file_meta[path] = file_meta.get(path, {}).merged({ cursor = "%d,%d" % [cursor.x, cursor.y] }, true)
+	set_user_value("file_meta", file_meta)
 
 
 static func get_caret(path: String) -> Vector2:
-	var carets = get_user_value("carets", {})
-	if carets.has(path):
-		var caret = carets.get(path)
-		return Vector2(caret.x, caret.y)
+	var file_meta: Dictionary = get_user_value("file_meta", {})
+	if file_meta.has(path):
+		var cursor: PackedStringArray = file_meta.get(path).get("cursor", "0,0").split(",")
+		return Vector2(cursor[0].to_int(), cursor[1].to_int())
 	else:
 		return Vector2.ZERO
+
+
+static func set_scroll(path: String, scroll_vertical: int) -> void:
+	var file_meta: Dictionary = get_user_value("file_meta", {})
+	file_meta[path] = file_meta.get(path, {}).merged({ scroll_vertical = scroll_vertical }, true)
+	set_user_value("file_meta", file_meta)
+
+
+static func get_scroll(path: String) -> int:
+	var file_meta: Dictionary = get_user_value("file_meta", {})
+	if file_meta.has(path):
+		return file_meta.get(path).get("scroll_vertical", 0)
+	else:
+		return 0
 
 
 static func check_for_dotnet_solution() -> bool:

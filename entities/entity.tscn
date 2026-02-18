@@ -1,9 +1,9 @@
-[gd_scene load_steps=69 format=3 uid="uid://d2nwo602rnihe"]
+[gd_scene format=3 uid="uid://d2nwo602rnihe"]
 
 [ext_resource type="Script" uid="uid://dqakytqwu5cpx" path="res://entities/character_entity.gd" id="1_g6455"]
 [ext_resource type="Shader" uid="uid://blugt5j7e8tag" path="res://shaders/flash.gdshader" id="2_b5eyi"]
-[ext_resource type="Texture2D" uid="uid://2hk61pfrsnoq" path="res://entities/player/chara-hero.png" id="2_dy2m5"]
-[ext_resource type="Texture2D" uid="uid://u6u2m671txxo" path="res://entities/shadow.png" id="2_xhiia"]
+[ext_resource type="Texture2D" uid="uid://2us16ikdxggi" path="res://entities/player/chara-hero.png" id="2_dy2m5"]
+[ext_resource type="Texture2D" uid="uid://dqdsb4hxbddvv" path="res://entities/shadow.png" id="2_xhiia"]
 [ext_resource type="AnimationLibrary" uid="uid://fjwdql68jj7x" path="res://entities/animations/char-global.res" id="4_hhyyf"]
 [ext_resource type="AnimationLibrary" uid="uid://ddkqxa6prgwqi" path="res://entities/animations/char-attack.res" id="5_gfoxn"]
 [ext_resource type="AnimationLibrary" uid="uid://684lg3hi3vjy" path="res://entities/animations/char-hurt.res" id="6_3jrrx"]
@@ -14,6 +14,7 @@
 [ext_resource type="AnimationNodeStateMachine" uid="uid://b4nom5gtsxhou" path="res://entities/animations/char_anim_states.tres" id="10_esda3"]
 [ext_resource type="Script" uid="uid://c0icpyv7syk84" path="res://entities/hit_box.gd" id="13_tgfo6"]
 [ext_resource type="Script" uid="uid://cussxi05gthfd" path="res://entities/hurt_box.gd" id="14_68xn4"]
+[ext_resource type="PackedScene" uid="uid://bw7ep80epbw4i" path="res://components/jumper.tscn" id="15_68xn4"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tgfo6"]
 radius = 9.0
@@ -473,7 +474,7 @@ radius = 3.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_528vq"]
 size = Vector2(22, 20)
 
-[node name="Entity" type="CharacterBody2D" node_paths=PackedStringArray("animation_tree", "sync_rotation", "hit_box", "blocks_detector", "fall_detector")]
+[node name="Entity" type="CharacterBody2D" unique_id=1792601580 node_paths=PackedStringArray("animation_tree", "sync_rotation", "hit_box", "blocks_detector", "fall_detector")]
 y_sort_enabled = true
 collision_layer = 2
 collision_mask = 7
@@ -486,51 +487,49 @@ hit_box = NodePath("HitBox")
 blocks_detector = NodePath("BlocksDetector")
 fall_detector = NodePath("FallDetector")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=886084973]
 position = Vector2(0, -2)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_tgfo6")
 
-[node name="Shadow" type="Sprite2D" parent="."]
+[node name="Shadow" type="Sprite2D" parent="." unique_id=1469070037]
 modulate = Color(1, 1, 1, 0.235294)
 z_index = -1
 position = Vector2(-1, 6)
 texture = ExtResource("2_xhiia")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." groups=["flash"]]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1449465034 groups=["flash"]]
 material = SubResource("ShaderMaterial_mrbe6")
-position = Vector2(0, -16)
 sprite_frames = SubResource("SpriteFrames_mrbe6")
 animation = &"walk-down"
 autoplay = "idle-down"
+offset = Vector2(0, -16)
 
-[node name="BlocksDetector" type="RayCast2D" parent="."]
+[node name="BlocksDetector" type="RayCast2D" parent="." unique_id=666440959]
 modulate = Color(1, 0, 1, 1)
 rotation = 1.5708
 target_position = Vector2(32, 0)
 collision_mask = 5
 
-[node name="FallDetector" type="ShapeCast2D" parent="."]
+[node name="FallDetector" type="ShapeCast2D" parent="." unique_id=1147699892]
 modulate = Color(0.611765, 0.192157, 1, 0.517647)
 shape = SubResource("CircleShape2D_geh4k")
 target_position = Vector2(0, 0)
 collision_mask = 4
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1720222141]
 process_mode = 3
-libraries = {
-&"": ExtResource("4_hhyyf"),
-&"char-attack": ExtResource("5_gfoxn"),
-&"char-hurt": ExtResource("6_3jrrx"),
-&"char-idle": ExtResource("6_bqfdd"),
-&"char-jump": ExtResource("7_ktamm"),
-&"char-run": ExtResource("8_xdo4a"),
-&"char-walk": ExtResource("9_ihjft")
-}
-autoplay = "char-idle/down"
+libraries/ = ExtResource("4_hhyyf")
+libraries/char-attack = ExtResource("5_gfoxn")
+libraries/char-hurt = ExtResource("6_3jrrx")
+libraries/char-idle = ExtResource("6_bqfdd")
+libraries/char-jump = ExtResource("7_ktamm")
+libraries/char-run = ExtResource("8_xdo4a")
+libraries/char-walk = ExtResource("9_ihjft")
+autoplay = &"char-idle/down"
 speed_scale = 0.15
 
-[node name="AnimationTree" type="AnimationTree" parent="."]
+[node name="AnimationTree" type="AnimationTree" parent="." unique_id=2079922695]
 process_mode = 3
 active = false
 deterministic = false
@@ -550,7 +549,7 @@ parameters/run/TimeScale/scale = 0.3
 parameters/walk/BlendSpace2D/blend_position = Vector2(0, 0)
 parameters/walk/TimeScale/scale = 0.25
 
-[node name="HitBox" type="Area2D" parent="."]
+[node name="HitBox" type="Area2D" parent="." unique_id=1838126655]
 z_index = -1
 position = Vector2(0, 3)
 collision_layer = 32
@@ -558,21 +557,24 @@ collision_mask = 0
 monitoring = false
 script = ExtResource("13_tgfo6")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox" unique_id=856153241]
 shape = SubResource("CircleShape2D_jk47u")
 debug_color = Color(0.968462, 0.159615, 0.204928, 0.42)
 
-[node name="HurtBox" type="Area2D" parent="."]
+[node name="HurtBox" type="Area2D" parent="." unique_id=1240273397]
 z_index = -1
 collision_layer = 0
 collision_mask = 80
 monitorable = false
 script = ExtResource("14_68xn4")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox" unique_id=398080308]
 position = Vector2(0, -4)
 shape = SubResource("RectangleShape2D_528vq")
 disabled = true
 debug_color = Color(0.470614, 0.553729, 0.568295, 0.42)
+
+[node name="Jumper" parent="." unique_id=163421984 instance=ExtResource("15_68xn4")]
+unique_name_in_owner = true
 
 [connection signal="action_performed" from="." to="HurtBox" method="_on_entity_action_performed"]

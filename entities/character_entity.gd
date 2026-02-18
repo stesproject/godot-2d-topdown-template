@@ -13,13 +13,17 @@ extends CharacterBody2D
 @export var initial_facing: Direction ## The initial direction the entity will face when spawned.
 
 @export_group("Movement")
-@export var max_speed = 300.0 ## The maximum speed the entity can reach while moving.
-@export var friction = 2000.0 ## Affects the time it takes for the entity to reach max_speed or to stop.
+@export var max_speed := 250.0 ## The maximum speed the entity can reach while moving.
+@export var friction := 2000.0 ## Affects the time it takes for the entity to reach max_speed or to stop.
 @export var blocks_detector: RayCast2D ## A RayCast2D node to identify when the entity is in front of a tile or element that blocks it.
 @export var fall_detector: ShapeCast2D ## A ShapeCast2D node that identifies when the entity is falling, triggering the "on_fall" state.
 @export var running_particles: GPUParticles2D = null ## A GPUParticles2D to enable when the entity is running (is_running == true).
 var speed_multiplier := 1.0
 var friction_multiplier := 1.0
+
+@export_group("Jump")
+@export var jump_height := 36.0
+@export var jump_time := 1.25
 
 @export_group("States")
 @export var on_attack: State ## State to enable when this entity attacks.
@@ -29,6 +33,7 @@ var friction_multiplier := 1.0
 @export var on_screen_exited: State ## State to enable when this entity is outside the visible screen.
 
 @onready var input_enabled: bool = self is PlayerEntity ## If enabled, the entity will respond to input-listening states, such as state_interact and state_input_listener.
+@onready var jumper: Path2D = %Jumper
 
 var screen_notifier: VisibleOnScreenNotifier2D ## The instance of a VisibleOnScreenNotifier2D node, automatically created to handle the on_screen_entered and on_screen_exited states in the entity.
 var attack_cooldown_timer: Timer ## The timer that manages the cooldown time between attacks.
@@ -179,7 +184,9 @@ func move(direction: Vector2):
 ##Starts a jump.
 func jump():
 	if not is_jumping:
+		animation_tree.set("parameters/jump/TimeScale/scale", jump_time)
 		is_jumping = true
+		jumper.jump_height = jump_height
 		safe_position = global_position
 		collision_layer ^= 1 << 1
 		collision_mask ^= (1 << 2) | (1 << 1)

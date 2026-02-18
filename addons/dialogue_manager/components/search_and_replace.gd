@@ -37,6 +37,7 @@ var result_index: int = -1:
 			var r = results[result_index]
 			code_edit.set_caret_line(r[0])
 			code_edit.select(r[0], r[1], r[0], r[1] + r[2])
+			code_edit.center_viewport_to_caret()
 		else:
 			result_index = -1
 			if is_instance_valid(code_edit):
@@ -71,6 +72,7 @@ func _ready() -> void:
 func focus_line_edit() -> void:
 	input.grab_focus()
 	input.select_all()
+	search()
 
 
 func apply_theme() -> void:
@@ -114,7 +116,7 @@ func find_in_line(line: String, text: String, from_index: int = 0) -> int:
 		return line.findn(text, from_index)
 
 
-### Signals
+#region Signals
 
 
 func _on_text_edit_gui_input(event: InputEvent) -> void:
@@ -167,7 +169,9 @@ func _on_input_gui_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.is_pressed():
 		match event.as_text():
 			"Enter":
-				search(input.text)
+				if results.size() == 0:
+					search(input.text)
+				self.result_index = wrapi(result_index + 1, 0, results.size())
 			"Escape":
 				emit_signal("close_requested")
 
@@ -177,13 +181,16 @@ func _on_replace_button_pressed() -> void:
 
 	# Replace the selection at result index
 	var r: Array = results[result_index]
+	code_edit.begin_complex_operation()
 	var lines: PackedStringArray = code_edit.text.split("\n")
 	var line: String = lines[r[0]]
 	line = line.substr(0, r[1]) + replace_input.text + line.substr(r[1] + r[2])
 	lines[r[0]] = line
 	code_edit.text = "\n".join(lines)
-	search(input.text, result_index)
+	code_edit.end_complex_operation()
 	code_edit.text_changed.emit()
+
+	search(input.text, result_index)
 
 
 func _on_replace_all_button_pressed() -> void:
@@ -210,3 +217,6 @@ func _on_input_focus_entered() -> void:
 
 func _on_match_case_check_box_toggled(button_pressed: bool) -> void:
 	search()
+
+
+#endregion

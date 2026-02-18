@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://cywf4chupnsem"]
+[gd_scene format=3 uid="uid://cywf4chupnsem"]
 
 [ext_resource type="Script" uid="uid://bfca8vxudutht" path="res://scripts/settings_menu.gd" id="1_ky16d"]
 
@@ -20,11 +20,11 @@ corner_radius_bottom_left = 4
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nyix4"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
 
-[node name="SettingsMenu" type="CanvasLayer"]
+[node name="SettingsMenu" type="CanvasLayer" unique_id=962766944]
 process_mode = 2
 script = ExtResource("1_ky16d")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=2077790645]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -32,7 +32,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_8ute6")
 
-[node name="BackgroundPanel" type="Panel" parent="Panel"]
+[node name="BackgroundPanel" type="Panel" parent="Panel" unique_id=1731237783]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -41,7 +41,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_v1pkg")
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel/BackgroundPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="Panel/BackgroundPanel" unique_id=1973132453]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -53,33 +53,33 @@ theme_override_constants/margin_top = 35
 theme_override_constants/margin_right = 25
 theme_override_constants/margin_bottom = 50
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel/BackgroundPanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/BackgroundPanel/MarginContainer" unique_id=927797226]
 layout_mode = 2
 
-[node name="Heading" type="Label" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer"]
+[node name="Heading" type="Label" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer" unique_id=1355972832]
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_font_sizes/font_size = 32
 text = "Settings"
 horizontal_alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer" unique_id=789202651]
 layout_mode = 2
 theme_override_constants/margin_left = 25
 theme_override_constants/margin_top = 25
 theme_override_constants/margin_right = 25
 theme_override_constants/margin_bottom = 25
 
-[node name="GridContainer" type="GridContainer" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer"]
+[node name="GridContainer" type="GridContainer" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer" unique_id=340751511]
 layout_mode = 2
 columns = 2
 
-[node name="MusicVol" type="Label" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
+[node name="MusicVol" type="Label" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer" unique_id=1246420616]
 custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
 text = "Music Volume"
 
-[node name="MusicSlider" type="HSlider" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
+[node name="MusicSlider" type="HSlider" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer" unique_id=1234763504]
 unique_name_in_owner = true
 layout_direction = 2
 layout_mode = 2
@@ -90,12 +90,12 @@ max_value = 1.0
 step = 0.05
 value = 1.0
 
-[node name="SFXVol" type="Label" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
+[node name="SFXVol" type="Label" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer" unique_id=1159578428]
 custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
 text = "SFX Volume"
 
-[node name="SFXSlider" type="HSlider" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
+[node name="SFXSlider" type="HSlider" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer" unique_id=388654611]
 unique_name_in_owner = true
 layout_direction = 2
 layout_mode = 2
@@ -106,26 +106,26 @@ max_value = 1.0
 step = 0.05
 value = 1.0
 
-[node name="Language" type="Label" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
+[node name="Language" type="Label" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer" unique_id=8851199]
 custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
 text = "Language
 "
 
-[node name="LanguageDropdown" type="OptionButton" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
+[node name="LanguageDropdown" type="OptionButton" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer" unique_id=1221140461]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Panel" type="Panel" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer"]
+[node name="Panel" type="Panel" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer" unique_id=332866723]
 custom_minimum_size = Vector2(2.08165e-12, 25)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_nyix4")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer" unique_id=126691102]
 layout_mode = 2
 alignment = 1
 
-[node name="CloseButton" type="Button" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="CloseButton" type="Button" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1684835691]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 2.08165e-12)
 layout_mode = 2

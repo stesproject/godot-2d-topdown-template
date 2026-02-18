@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataWeapon" load_steps=4 format=3 uid="uid://bwwneuh3ges0r"]
+[gd_resource type="Resource" script_class="DataWeapon" format=3 uid="uid://bwwneuh3ges0r"]
 
 [ext_resource type="Script" uid="uid://bc7pmqpgxatnh" path="res://items/weapons/data_weapon.gd" id="1_81vel"]
 
@@ -12,7 +12,4 @@ region = Rect2(0, 0, 32, 32)
 [resource]
 resource_name = "sword"
 script = ExtResource("1_81vel")
-power = 1
-speed = 0.5
 icon = SubResource("AtlasTexture_eudqs")
-hide_from_inventory = false

@@ -1,14 +1,13 @@
 @tool
-extends EditorProperty
+
+class_name DMDialogueEditorProperty extends EditorProperty
 
 
-const DialoguePropertyEditorControl = preload("./editor_property_control.tscn")
+const DialoguePropertyEditorControl: PackedScene = preload("./editor_property_control.tscn")
 
-
-var editor_plugin: EditorPlugin
 
 var control = DialoguePropertyEditorControl.instantiate()
-var current_value: Resource
+var current_value: DialogueResource
 var is_updating: bool = false
 
 
@@ -17,12 +16,11 @@ func _init() -> void:
 
 	control.resource = current_value
 
-	control.pressed.connect(_on_button_pressed)
 	control.resource_changed.connect(_on_resource_changed)
 
 
 func _update_property() -> void:
-	var next_value = get_edited_object()[get_edited_property()]
+	var next_value: DialogueResource = get_edited_object()[get_edited_property()]
 
 	# The resource might have been deleted elsewhere so check that it's not in a weird state
 	if is_instance_valid(next_value) and not next_value.resource_path.ends_with(".dialogue"):
@@ -37,12 +35,11 @@ func _update_property() -> void:
 	is_updating = false
 
 
-### Signals
+#region Signals
 
 
-func _on_button_pressed() -> void:
-	editor_plugin.edit(current_value)
-
-
-func _on_resource_changed(next_resource: Resource) -> void:
+func _on_resource_changed(next_resource: DialogueResource) -> void:
 	emit_changed(get_edited_property(), next_resource)
+
+
+#endregion

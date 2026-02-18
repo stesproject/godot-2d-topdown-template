@@ -26,9 +26,6 @@ var text_replacements: Array[Dictionary] = []
 ## The key to use for translating this line.
 var translation_key: String = ""
 
-## A map for when and for how long to pause while typing out the dialogue text.
-var pauses: Dictionary = {}
-
 ## A map for speed changes when typing out the dialogue text.
 var speeds: Dictionary = {}
 
@@ -71,7 +68,6 @@ func _init(data: Dictionary = {}) -> void:
 				text = data.text
 				text_replacements = data.get("text_replacements", [] as Array[Dictionary])
 				translation_key = data.get("translation_key", data.text)
-				pauses = data.get("pauses", {})
 				speeds = data.get("speeds", {})
 				inline_mutations = data.get("inline_mutations", [] as Array[Array])
 				time = data.get("time", "")
@@ -91,8 +87,18 @@ func _to_string() -> String:
 	return ""
 
 
+## Check if a dialogue line has a given tag.
+func has_tag(tag_name: String) -> bool:
+	var wrapped: String = "%s=" % tag_name
+	for t in tags:
+		if t.begins_with(wrapped):
+			return true
+	return false
+
+
+## Get the value of a tag if the tag is in the form of [code]tag=value[/code]
 func get_tag_value(tag_name: String) -> String:
-	var wrapped := "%s=" % tag_name
+	var wrapped: String = "%s=" % tag_name
 	for t in tags:
 		if t.begins_with(wrapped):
 			return t.replace(wrapped, "").strip_edges()
